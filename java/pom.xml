@@ -3,8 +3,8 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>noobbot</groupId>
-  <artifactId>noobbot</artifactId>
+  <groupId>gwbot</groupId>
+  <artifactId>gwbot</artifactId>
   <version>0.1-SNAPSHOT</version>
   <dependencies>
     <!-- Logging -->
@@ -72,5 +72,6 @@
       </plugin>
     </plugins>
   </build>
+    <name>Hello World Open</name>
 </project>
 
