@@ -1,6 +1,5 @@
 package gwbot.message;
 
-import gwbot.message.MessageWrapper;
 import com.google.gson.Gson;
 
 /**
@@ -9,8 +8,8 @@ import com.google.gson.Gson;
  */
 public abstract class Message {
 
-	public String toJson() {
-		return new Gson().toJson(new MessageWrapper(this));
+	public String toJson(Gson gson) {
+		return gson.toJson(new MessageWrapper(this));
 	}
 
 	protected Object msgData() {
