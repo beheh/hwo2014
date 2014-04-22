@@ -1,5 +1,6 @@
-package gwbot.messages;
+package gwbot.message;
 
+import gwbot.message.MessageWrapper;
 import com.google.gson.Gson;
 
 /**
