@@ -22,7 +22,9 @@ import gwbot.gson.MessageWrapperExclStrat;
 import gwbot.message.YourCarMessage;
 import gwbot.track.Piece;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 /**
  *
@@ -111,9 +113,8 @@ public final class Main {
 				case "turboAvailable":
 					break;
 				case "carPositions":
-					Type carPositionsCollectionType = new TypeToken<Collection<CarPositionsMessage>>() {
-					}.getType();
-					Collection<CarPositionsMessage> carPositions = gson.fromJson(msgFromServer.data.toString(), carPositionsCollectionType);
+					Type carPositionsCollectionType = new TypeToken<ArrayList<CarPositionsMessage>>() {}.getType();
+					List<CarPositionsMessage> carPositions = gson.fromJson(msgFromServer.data.toString(), carPositionsCollectionType);
 					bot.onCarPositions(carPositions);
 					break;
 				case "lapFinished":

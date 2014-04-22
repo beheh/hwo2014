@@ -4,7 +4,7 @@ import gwbot.message.CarPositionsMessage;
 import gwbot.message.GameInitMessage;
 import gwbot.message.JoinMessage;
 import gwbot.message.YourCarMessage;
-import java.util.Collection;
+import java.util.List;
 
 /**
  *
@@ -18,5 +18,5 @@ public interface BotInterface {
 
 	public void onGameInitMessage(GameInitMessage gameInitMessage);
 
-	public void onCarPositions(Collection<CarPositionsMessage> carPositionsMessage);
+	public void onCarPositions(List<CarPositionsMessage> carPositionsMessage);
 }

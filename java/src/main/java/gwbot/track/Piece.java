@@ -29,6 +29,10 @@ public class Piece {
 		return isSwitch;
 	}
 
+	public boolean isCurve() {
+		return radius != 0 || angle != 0;
+	}
+
 	public double getRadius() {
 		return radius;
 	}
