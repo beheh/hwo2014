@@ -17,4 +17,9 @@ public abstract class Message {
 	}
 
 	protected abstract String msgType();
+
+	@Override
+	public String toString() {
+		return this.msgType();
+	}
 }

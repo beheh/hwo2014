@@ -111,9 +111,11 @@ public final class Main {
 				case "gameStart":
 					break;
 				case "turboAvailable":
+					// turbo is available for a certain length
 					break;
 				case "carPositions":
-					Type carPositionsCollectionType = new TypeToken<ArrayList<CarPositionsMessage>>() {}.getType();
+					Type carPositionsCollectionType = new TypeToken<ArrayList<CarPositionsMessage>>() {
+					}.getType();
 					List<CarPositionsMessage> carPositions = gson.fromJson(msgFromServer.data.toString(), carPositionsCollectionType);
 					bot.onCarPositions(carPositions);
 					break;
@@ -128,6 +130,9 @@ public final class Main {
 					break;
 				case "tournamentEnd":
 					disconnect = true;
+					break;
+				case "error":
+					System.out.println("last message was: " + lastMessage.toJson(gson));
 					break;
 				default:
 					// do nothing, return ping to acknowledge
@@ -144,7 +149,10 @@ public final class Main {
 		socket.close();
 	}
 
+	private Message lastMessage;
+
 	public void send(final Message message) {
+		lastMessage = message;
 		writer.println(message.toJson(gson));
 		writer.flush();
 	}

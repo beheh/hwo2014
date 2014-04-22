@@ -21,6 +21,10 @@ public class CarPositionsMessage extends Message {
 		return "carPositions";
 	}
 
+	public double getAngle() {
+		return angle;
+	}
+
 	public int getPieceIndex() {
 		return piecePosition.getPieceIndex();
 	}
