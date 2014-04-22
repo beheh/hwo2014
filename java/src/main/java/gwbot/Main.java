@@ -29,6 +29,8 @@ import java.util.Collection;
  */
 public final class Main {
 
+	private static Socket socket;
+
 	public static void main(String... args) {
 
 		System.out.println("This is GoldwipfBot, ready to go");
@@ -41,14 +43,14 @@ public final class Main {
 		System.out.print("Connecting to " + host + ":" + port + " as " + botName + "/" + botKey + "...");
 
 		try {
-			final Socket socket = new Socket(host, port);
+			socket = new Socket(host, port);
 			System.out.println(" connected");
 
 			final PrintWriter writer = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(), "utf-8"));
 			final BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream(), "utf-8"));
 
 			new Main(reader, writer, new JoinMessage(botName, botKey));
-		} catch(IOException ex) {
+		} catch (IOException ex) {
 			System.out.println("failed");
 			ex.printStackTrace(System.err);
 			System.exit(1);
@@ -74,19 +76,20 @@ public final class Main {
 		send(join);
 
 		// success, if we receive answer
-		while((line = reader.readLine()) != null) {
+		while ((line = reader.readLine()) != null) {
 			final MessageWrapper msgFromServer = gson.fromJson(line, MessageWrapper.class);
 
-			if(msgFromServer.msgType.equals("join")) {
+			if (msgFromServer.msgType.equals("join")) {
 				System.out.println(" accepted");
 				continue;
 			}
 
-			if(!msgFromServer.msgType.equals("carPositions")) {
+			if (!msgFromServer.msgType.equals("carPositions")) {
 				System.out.println("*" + msgFromServer.msgType);
 			}
 
-			switch(msgFromServer.msgType) {
+			boolean disconnect = false;
+			switch (msgFromServer.msgType) {
 				case "yourCar":
 					YourCarMessage yourCarMessage = gson.fromJson(msgFromServer.data.toString(), YourCarMessage.class);
 					System.out.println("we are the car " + yourCarMessage.getName() + " with color " + yourCarMessage.getColor());
@@ -100,23 +103,39 @@ public final class Main {
 					break;
 				case "gameStart":
 					break;
+				case "turboAvailable":
+					break;
 				case "carPositions":
-					Type carPositionsCollectionType = new TypeToken<Collection<CarPositionsMessage>>(){}.getType();
+					Type carPositionsCollectionType = new TypeToken<Collection<CarPositionsMessage>>() {
+					}.getType();
 					Collection<CarPositionsMessage> carPositions = gson.fromJson(msgFromServer.data.toString(), carPositionsCollectionType);
 					bot.onCarPositions(carPositions);
 					break;
 				case "lapFinished":
+					System.out.println("lap finished");
 					break;
 				case "crash":
 					break;
+				case "spawn":
+					break;
 				case "gameEnd":
+					break;
+				case "tournamentEnd":
+					disconnect = true;
 					break;
 				default:
 					// do nothing, return ping to acknowledge
 					send(new PingMessage());
 					break;
 			}
+
+			if (disconnect) {
+				break;
+			}
 		}
+
+		System.out.println("disconnecting from server");
+		socket.close();
 	}
 
 	public void send(final Message message) {
