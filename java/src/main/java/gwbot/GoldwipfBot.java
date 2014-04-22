@@ -18,6 +18,8 @@ import java.util.List;
 public class GoldwipfBot extends GenericBot {
 
 	private Track track;
+	private double lastProgression;
+	private double speed;
 
 	public GoldwipfBot(Main main) {
 		super(main);
@@ -40,14 +42,28 @@ public class GoldwipfBot extends GenericBot {
 	@Override
 	public void onCarPositions(List<CarPositionsMessage> carPositionsMessages) {
 		CarPositionsMessage ownPositionMessage = carPositionsMessages.get(0);
-		ownPositionMessage.getPieceIndex();
+
 		Piece currentPiece = track.getPiece(ownPositionMessage.getPieceIndex());
 		Piece nextPiece = track.getPiece((ownPositionMessage.getPieceIndex() + 1) % track.getPieceCount());
+		ownPositionMessage.getInPieceDistance();
 
-		if (currentPiece.isCurve()) {
-			send(new ThrottleMessage(0.4));
+		// calculate current speed
+		if (lastProgression < ownPositionMessage.getInPieceDistance()) {
+			speed = ownPositionMessage.getInPieceDistance() - lastProgression;
 		} else {
-			send(new ThrottleMessage(0.8));
+			//last piece length - progression from last piece + progressio
+		}
+		lastProgression = ownPositionMessage.getInPieceDistance();
+
+		// distance to next piece
+		double distance = currentPiece.getLength() - ownPositionMessage.getInPieceDistance();
+
+		if (!currentPiece.isCurve() && nextPiece.isCurve() && distance < speed * 150 && speed > 3) {
+			send(new ThrottleMessage(0));
+		} else if (currentPiece.isCurve()) {
+			send(new ThrottleMessage(0.9d / 30d * Math.max(1, 30 - Math.abs(ownPositionMessage.getAngle()))));
+		} else {
+			send(new ThrottleMessage(1));
 		}
 	}
 
