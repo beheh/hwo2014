@@ -1,31 +1,6 @@
-## Hello World Open (HWO) 2014 Bot Template
+## Hello World Open (HWO) 2014 Goldwipf Bot
 
-This is the HWO 2014 Bot Template. It contains simple racing bot implementations
-for the Hello World Open 2014 competiion in different languages. You job is to
-pick one of those and make it a winner.
-
-Please refer to the online [Technical Specification](https://helloworldopen.com/techspec)
-for most recent information. We won't be updating this document in your codebase :)
-
-### Get started
-
-1. Optionally, change your programming language by editing the `config` file.
-   Then commit changes and push to master.
-
-        vim config
-        git commit -am "set language to Haskell" && push origin master
-
-2. Code a winning bot. Our CI server will test your bot when you push to the
-   master branch.
-
-3. Try it against the test server (you'll get test server hostname and port
-   from your team page)
-
-        ./build
-        ./run <host> <port>
-
-Don't modify the scripts on the main level. These scripts ensure that all bots
-respond to a common control interface.
+This is Goldwipf Bot gwbot.
 
 ### File Structure And Scripts
 
