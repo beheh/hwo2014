@@ -34,6 +34,10 @@ public class Track {
 		return pieces;
 	}
 
+	public int getLaneCount() {
+		return lanes.size();
+	}
+	
 	public ArrayList<Lane> getLanes() {
 		return lanes;
 	}
