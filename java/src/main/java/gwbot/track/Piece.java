@@ -33,6 +33,14 @@ public class Piece {
 		return radius != 0 || angle != 0;
 	}
 
+	public boolean isLeftCurve() {
+		return angle < 0;
+	}
+
+	public boolean isRightCurve() {
+		return angle > 0;
+	}
+
 	public double getRadius() {
 		return radius;
 	}

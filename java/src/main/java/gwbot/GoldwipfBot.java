@@ -18,8 +18,6 @@ import java.util.List;
 public class GoldwipfBot extends GenericBot {
 
 	private Track track;
-	private double lastProgression;
-	private double speed;
 
 	public GoldwipfBot(Main main) {
 		super(main);
@@ -39,6 +37,10 @@ public class GoldwipfBot extends GenericBot {
 	public void onYourCarMessage(YourCarMessage yourCarMessage) {
 	}
 
+	private double lastProgression;
+	private double speed;
+	private double lastAngle;
+
 	@Override
 	public void onCarPositions(List<CarPositionsMessage> carPositionsMessages) {
 		CarPositionsMessage ownPositionMessage = carPositionsMessages.get(0);
@@ -47,7 +49,7 @@ public class GoldwipfBot extends GenericBot {
 		Piece nextPiece = track.getPiece((ownPositionMessage.getPieceIndex() + 1) % track.getPieceCount());
 		ownPositionMessage.getInPieceDistance();
 
-		// calculate current speed
+		// update speed
 		if (lastProgression < ownPositionMessage.getInPieceDistance()) {
 			speed = ownPositionMessage.getInPieceDistance() - lastProgression;
 		} else {
@@ -58,13 +60,31 @@ public class GoldwipfBot extends GenericBot {
 		// distance to next piece
 		double distance = currentPiece.getLength() - ownPositionMessage.getInPieceDistance();
 
-		if (!currentPiece.isCurve() && nextPiece.isCurve() && distance < speed * 150 && speed > 3) {
-			send(new ThrottleMessage(0));
-		} else if (currentPiece.isCurve()) {
-			send(new ThrottleMessage(0.9d / 30d * Math.max(1, 30 - Math.abs(ownPositionMessage.getAngle()))));
-		} else {
-			send(new ThrottleMessage(1));
+		// calculate angledifference
+		double angleDifference = 0.0d;
+		if (currentPiece.isCurve()) {
+			angleDifference = Math.abs(ownPositionMessage.getAngle()) - Math.abs(lastAngle);
 		}
+		double angle = lastAngle = ownPositionMessage.getAngle();
+
+		double throttle = 1;
+		if (!currentPiece.isCurve() && nextPiece.isCurve() && distance < speed * 150 && speed > 3) {
+			throttle = 0;
+		} else if (currentPiece.isCurve()) {
+			// 2/3 of the way
+			if (ownPositionMessage.getInPieceDistance() > (currentPiece.getLength() * 1 / 2)) {
+				if (angleDifference > 0) {
+					throttle = 0.5d * (30d / (30d - angleDifference));
+				} else {
+					throttle = 1;
+				}
+			} else {
+				throttle = 1d / 30d * Math.max(1, 30 - Math.abs(ownPositionMessage.getAngle()));
+			}
+		} else {
+			throttle = 1;
+		}
+		send(new ThrottleMessage(throttle));
 	}
 
 }
