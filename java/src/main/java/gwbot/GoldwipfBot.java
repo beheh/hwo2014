@@ -24,7 +24,7 @@ import gwbot.message.YourCarMessage;
 public class GoldwipfBot {
 
 	public static void main(String... args) {
-		System.out.println("Initializing GoldwipfBot...");
+		System.out.println("This is GoldwipfBot, ready to go");
 
 		String host = args[0];
 		int port = Integer.parseInt(args[1]);
