@@ -6,7 +6,10 @@ import gwbot.message.GameInitMessage;
 import gwbot.message.JoinMessage;
 import gwbot.message.ThrottleMessage;
 import gwbot.message.YourCarMessage;
-import java.util.Collection;
+import gwbot.race.Race;
+import gwbot.track.Piece;
+import gwbot.track.Track;
+import java.util.List;
 
 /**
  *
@@ -14,12 +17,16 @@ import java.util.Collection;
  */
 public class GoldwipfBot extends GenericBot {
 
+	private Track track;
+
 	public GoldwipfBot(Main main) {
 		super(main);
 	}
 
 	@Override
 	public void onGameInitMessage(GameInitMessage gameInitMessage) {
+		Race race = gameInitMessage.getRace();
+		this.track = race.getTrack();
 	}
 
 	@Override
@@ -31,8 +38,17 @@ public class GoldwipfBot extends GenericBot {
 	}
 
 	@Override
-	public void onCarPositions(Collection<CarPositionsMessage> carPositionsMessage) {
-		send(new ThrottleMessage(0.6));
+	public void onCarPositions(List<CarPositionsMessage> carPositionsMessages) {
+		CarPositionsMessage ownPositionMessage = carPositionsMessages.get(0);
+		ownPositionMessage.getPieceIndex();
+		Piece currentPiece = track.getPiece(ownPositionMessage.getPieceIndex());
+		Piece nextPiece = track.getPiece((ownPositionMessage.getPieceIndex() + 1) % track.getPieceCount());
+
+		if (currentPiece.isCurve()) {
+			send(new ThrottleMessage(0.4));
+		} else {
+			send(new ThrottleMessage(0.8));
+		}
 	}
 
 }
