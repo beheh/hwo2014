@@ -18,8 +18,9 @@ import gwbot.message.CarPositionsMessage;
 import gwbot.message.GameInitMessage;
 import gwbot.message.Message;
 import gwbot.message.MessageWrapper;
-import gwbot.message.MessageWrapperExclStrat;
+import gwbot.gson.MessageWrapperExclStrat;
 import gwbot.message.YourCarMessage;
+import gwbot.track.Piece;
 import java.lang.reflect.Type;
 import java.util.Collection;
 
@@ -98,6 +99,10 @@ public final class Main {
 				case "gameInit":
 					GameInitMessage gameInitMessage = gson.fromJson(msgFromServer.data.toString(), GameInitMessage.class);
 					Track track = gameInitMessage.getRace().getTrack();
+					Collection<Piece> pieces = track.getPieces();
+					for (Piece piece : pieces) {
+						System.out.println(piece);
+					}
 					System.out.println("track is " + track.getName() + " with " + track.getLanes().size() + " lanes");
 					bot.onGameInitMessage(gameInitMessage);
 					break;

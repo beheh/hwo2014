@@ -1,7 +1,8 @@
-package gwbot.message;
+package gwbot.gson;
 
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
+import gwbot.message.MessageWrapper;
 
 /**
  *
