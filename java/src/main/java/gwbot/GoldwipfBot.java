@@ -5,6 +5,7 @@ import gwbot.message.CarPositionsMessage;
 import gwbot.message.GameInitMessage;
 import gwbot.message.JoinMessage;
 import gwbot.message.ThrottleMessage;
+import gwbot.message.TurboAvailableMessage;
 import gwbot.message.YourCarMessage;
 import gwbot.race.Race;
 import gwbot.track.Piece;
@@ -50,7 +51,7 @@ public class GoldwipfBot extends GenericBot {
 		ownPositionMessage.getInPieceDistance();
 
 		// update speed
-		if (lastProgression < ownPositionMessage.getInPieceDistance()) {
+		if(lastProgression < ownPositionMessage.getInPieceDistance()) {
 			speed = ownPositionMessage.getInPieceDistance() - lastProgression;
 		} else {
 			//last piece length - progression from last piece + progressio
@@ -62,18 +63,18 @@ public class GoldwipfBot extends GenericBot {
 
 		// calculate angledifference
 		double angleDifference = 0.0d;
-		if (currentPiece.isCurve()) {
+		if(currentPiece.isCurve()) {
 			angleDifference = Math.abs(ownPositionMessage.getAngle()) - Math.abs(lastAngle);
 		}
 		double angle = lastAngle = ownPositionMessage.getAngle();
 
 		double throttle = 1;
-		if (!currentPiece.isCurve() && nextPiece.isCurve() && distance < speed * 150 && speed > 3) {
+		if(!currentPiece.isCurve() && nextPiece.isCurve() && distance < speed * 150 && speed > 3) {
 			throttle = 0;
-		} else if (currentPiece.isCurve()) {
+		} else if(currentPiece.isCurve()) {
 			// 2/3 of the way
-			if (ownPositionMessage.getInPieceDistance() > (currentPiece.getLength() * 1 / 2)) {
-				if (angleDifference > 0) {
+			if(ownPositionMessage.getInPieceDistance() > (currentPiece.getLength() * 1 / 2)) {
+				if(angleDifference > 0) {
 					throttle = 0.5d * (30d / (30d - angleDifference));
 				} else {
 					throttle = 1;
@@ -85,6 +86,11 @@ public class GoldwipfBot extends GenericBot {
 			throttle = 1;
 		}
 		send(new ThrottleMessage(throttle));
+	}
+
+	@Override
+	public void onTurboAvailable(TurboAvailableMessage turboAvailableMessage) {
+
 	}
 
 }

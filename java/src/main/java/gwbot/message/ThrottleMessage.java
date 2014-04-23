@@ -1,11 +1,11 @@
 package gwbot.message;
 
 /**
- * 
+ *
  * @author Goldwipf <goldwipf@beheh.de>
  */
 public class ThrottleMessage extends Message {
-    private double value;
+    private final double value;
 
     public ThrottleMessage(double value) {
         this.value = value;

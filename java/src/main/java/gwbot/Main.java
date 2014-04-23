@@ -19,6 +19,7 @@ import gwbot.message.GameInitMessage;
 import gwbot.message.Message;
 import gwbot.message.MessageWrapper;
 import gwbot.gson.MessageWrapperExclStrat;
+import gwbot.message.TurboAvailableMessage;
 import gwbot.message.YourCarMessage;
 import gwbot.track.Piece;
 import java.lang.reflect.Type;
@@ -112,6 +113,8 @@ public final class Main {
 					break;
 				case "turboAvailable":
 					// turbo is available for a certain length
+					TurboAvailableMessage turboAvailableMessage = gson.fromJson(msgFromServer.data.toString(), TurboAvailableMessage.class);
+					bot.onTurboAvailable(turboAvailableMessage);
 					break;
 				case "carPositions":
 					Type carPositionsCollectionType = new TypeToken<ArrayList<CarPositionsMessage>>() {
