@@ -25,7 +25,6 @@ import java.io.PrintWriter;
 import java.lang.reflect.Type;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import com.google.gson.Gson;
@@ -118,10 +117,15 @@ public final class Main {
 					// receive initial details about the following game
 					GameInitMessage gameInitMessage = gson.fromJson(msgFromServer.data.toString(), GameInitMessage.class);
 					Track track = gameInitMessage.getRace().getTrack();
-					Collection<Piece> pieces = track.getPieces();
-					for (Piece piece : pieces) {
-						System.out.println(piece);
+					List<Piece> pieces = track.getPieces();
+					for (int i = 0; i < pieces.size(); i++) {
+						Piece piece = pieces.get(i);
+						piece.setNext(pieces.get((i + 1 + pieces.size()) % pieces.size()));
+						piece.setPrevious(pieces.get((i - 1 + pieces.size()) % pieces.size()));
 					}
+					/*for (Piece piece : pieces) {
+					 System.out.println(piece);
+					 }*/
 					System.out.println("track is " + track.getName() + " with " + track.getLanes().size() + " lanes");
 					bot.onGameInitMessage(gameInitMessage);
 					break;

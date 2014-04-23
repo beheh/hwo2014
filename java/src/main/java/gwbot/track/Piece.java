@@ -21,6 +21,36 @@ public class Piece {
 		this.angle = angle;
 	}
 
+	private Piece next;
+
+	/**
+	 * Returns the next piece.
+	 *
+	 * @return the next piece.
+	 */
+	public Piece next() {
+		return next;
+	}
+
+	public void setNext(Piece next) {
+		this.next = next;
+	}
+
+	private Piece previous;
+
+	/**
+	 * Returns the previous piece.
+	 *
+	 * @return the previous piece.
+	 */
+	public Piece previous() {
+		return previous;
+	}
+
+	public void setPrevious(Piece previous) {
+		this.previous = previous;
+	}
+
 	/**
 	 * Returns the track length of this piece on the centerline.
 	 *
@@ -37,7 +67,7 @@ public class Piece {
 	 * @return the piece length
 	 */
 	public double getLength(Lane lane) {
-		if(length == 0 && (radius != 0 || angle != 0)) {
+		if (length == 0 && (radius != 0 || angle != 0)) {
 			double curveRadius = radius + lane.distanceFromCenter;
 			return (2d * Math.PI * curveRadius) * Math.abs(angle) / 360;
 		}
