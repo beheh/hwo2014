@@ -4,7 +4,7 @@ import gwbot.bot.GenericBot;
 import gwbot.bot.impl.GoldwipfBot;
 import gwbot.bot.impl.NicoBot;
 import gwbot.gson.MessageWrapperExclStrat;
-import gwbot.message.CarPositionsMessage;
+import gwbot.message.CarPositionMessage;
 import gwbot.message.GameEndMessage;
 import gwbot.message.GameInitMessage;
 import gwbot.message.GameStartMessage;
@@ -134,9 +134,9 @@ public final class Main {
 					break;
 				case "carPositions":
 					// receive
-					Type carPositionsCollectionType = new TypeToken<ArrayList<CarPositionsMessage>>() {
+					Type carPositionsCollectionType = new TypeToken<ArrayList<CarPositionMessage>>() {
 					}.getType();
-					List<CarPositionsMessage> carPositions = gson.fromJson(msgFromServer.data.toString(), carPositionsCollectionType);
+					List<CarPositionMessage> carPositions = gson.fromJson(msgFromServer.data.toString(), carPositionsCollectionType);
 					bot.onCarPositions(carPositions);
 					break;
 				case "turboAvailable":

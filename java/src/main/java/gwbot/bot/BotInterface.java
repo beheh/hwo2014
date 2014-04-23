@@ -1,6 +1,6 @@
 package gwbot.bot;
 
-import gwbot.message.CarPositionsMessage;
+import gwbot.message.CarPositionMessage;
 import gwbot.message.GameEndMessage;
 import gwbot.message.GameInitMessage;
 import gwbot.message.GameStartMessage;
@@ -23,7 +23,7 @@ public interface BotInterface {
 
 	public void onJoinMessage(JoinMessage joinMessage);
 
-	public void onCarPositions(List<CarPositionsMessage> carPositionsMessage);
+	public void onCarPositions(List<CarPositionMessage> carPositionsMessage);
 
 	public void onTurboAvailable(TurboAvailableMessage turboAvailableMessage);
 

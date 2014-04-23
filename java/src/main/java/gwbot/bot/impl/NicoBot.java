@@ -2,7 +2,7 @@ package gwbot.bot.impl;
 
 import gwbot.Main;
 import gwbot.bot.GenericBot;
-import gwbot.message.CarPositionsMessage;
+import gwbot.message.CarPositionMessage;
 import gwbot.message.GameEndMessage;
 import gwbot.message.GameInitMessage;
 import gwbot.message.GameStartMessage;
@@ -47,11 +47,11 @@ public class NicoBot extends GenericBot {
 
 	private Piece sendFor = null;
 	private int _tic = 0;
-	private CarPositionsMessage _lastPosition = null;
+	private CarPositionMessage _lastPosition = null;
 
 	@Override
-	public void onCarPositions(List<CarPositionsMessage> carPositionsMessages) {
-		CarPositionsMessage ownPositionMessage = carPositionsMessages.get(0);
+	public void onCarPositions(List<CarPositionMessage> carPositionsMessages) {
+		CarPositionMessage ownPositionMessage = carPositionsMessages.get(0);
 
 		// Geschwindigkeit pro tic berechnen
 		_tic++;

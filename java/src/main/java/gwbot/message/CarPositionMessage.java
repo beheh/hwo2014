@@ -6,12 +6,12 @@ import gwbot.car.PiecePosition;
  *
  * @author Benedict Etzel <developer@beheh.de>
  */
-public class CarPositionsMessage extends Message {
+public class CarPositionMessage extends Message {
 
 	private final double angle;
 	private final PiecePosition piecePosition;
 
-	public CarPositionsMessage(double angle, PiecePosition piecePosition) {
+	public CarPositionMessage(double angle, PiecePosition piecePosition) {
 		this.angle = angle;
 		this.piecePosition = piecePosition;
 	}

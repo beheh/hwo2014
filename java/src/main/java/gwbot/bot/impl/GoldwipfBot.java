@@ -2,7 +2,7 @@ package gwbot.bot.impl;
 
 import gwbot.Main;
 import gwbot.bot.GenericBot;
-import gwbot.message.CarPositionsMessage;
+import gwbot.message.CarPositionMessage;
 import gwbot.message.GameEndMessage;
 import gwbot.message.GameInitMessage;
 import gwbot.message.GameStartMessage;
@@ -54,8 +54,8 @@ public class GoldwipfBot extends GenericBot {
 	private boolean switched = false;
 
 	@Override
-	public void onCarPositions(List<CarPositionsMessage> carPositionsMessages) {
-		CarPositionsMessage ownPositionMessage = carPositionsMessages.get(0);
+	public void onCarPositions(List<CarPositionMessage> carPositionMessages) {
+		CarPositionMessage ownPositionMessage = carPositionMessages.get(0);
 
 		Piece currentPiece = track.getPiece(ownPositionMessage.getPieceIndex());
 		Piece nextPiece = track.getPiece((ownPositionMessage.getPieceIndex() + 1) % track.getPieceCount());
