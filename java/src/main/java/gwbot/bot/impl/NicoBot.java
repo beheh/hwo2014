@@ -22,7 +22,7 @@ import java.util.List;
 
 /**
  * 
- * @author Benedict Etzel <developer@beheh.de>
+ * @author Nico Smeenk
  */
 public class NicoBot extends GenericBot {
 
@@ -68,12 +68,12 @@ public class NicoBot extends GenericBot {
 
 		if (currentPiece.next() != sendFor && currentPiece.next().isSwitch()) {
 			double angToNextSwitch = 0;
-			// wenn der Switch auch kurve ist, so die h�lfte des winkels mit
+			// wenn der Switch auch kurve ist, so die hälfte des winkels mit
 			// einrechnen
 			if (currentPiece.next().isCurve()) {
 				angToNextSwitch += (currentPiece.next().getAngle() / 2);
 			}
-			// gesamtkurvenwinkel bis zum n�chsten Switch berechnen
+			// gesamtkurvenwinkel bis zum nächsten Switch berechnen
 			ExtendedPiece piece = currentPiece.next().next();
 			while (!piece.isSwitch()) {
 				angToNextSwitch += piece.getAngle();
