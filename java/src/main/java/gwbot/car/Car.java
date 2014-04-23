@@ -14,10 +14,20 @@ public class Car {
 		this.color = color;
 	}
 
+	/**
+	 * Returns the name of the current car.
+	 *
+	 * @return the car name
+	 */
 	public String getName() {
 		return name;
 	}
 
+	/**
+	 * Returns the color of the current car.
+	 *
+	 * @return the car color
+	 */
 	public String getColor() {
 		return color;
 	}

@@ -19,6 +19,10 @@ public class GameInitMessage extends Message {
 		return "gameInit";
 	}
 
+	/**
+	 * Returns the current race the car is taking part in.
+	 * @return the current race
+	 */
 	public Race getRace() {
 		return race;
 	}

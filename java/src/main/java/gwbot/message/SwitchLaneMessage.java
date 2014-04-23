@@ -6,12 +6,14 @@ package gwbot.message;
  */
 public class SwitchLaneMessage extends Message {
 
-	public enum Direction {
-
-		LEFT, RIGHT
-	};
+	public enum Direction {LEFT, RIGHT};
 	private final Direction direction;
 
+	/**
+	 * Creates a switch lane message. The car will switch at the next possible intersection
+	 *
+	 * @param direction the direction to switch
+	 */
 	public SwitchLaneMessage(Direction direction) {
 		this.direction = direction;
 	}

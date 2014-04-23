@@ -21,14 +21,26 @@ public class CarPositionsMessage extends Message {
 		return "carPositions";
 	}
 
+	/**
+	 * Returns the current angle of the car relative to the track.
+	 * @return the current angle
+	 */
 	public double getAngle() {
 		return angle;
 	}
 
+	/**
+	 * Returns the index of the track piece the car is currently on.
+	 * @return the piece index
+	 */
 	public int getPieceIndex() {
 		return piecePosition.getPieceIndex();
 	}
 
+	/**
+	 * Returns the distance the car has traveled on the current piece.
+	 * @return 
+	 */
 	public double getInPieceDistance() {
 		return piecePosition.getInPieceDistance();
 	}

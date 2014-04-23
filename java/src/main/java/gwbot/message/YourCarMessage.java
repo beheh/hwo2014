@@ -19,10 +19,20 @@ public class YourCarMessage extends Message {
 		return "yourCar";
 	}
 
+	/**
+	 * Returns the name of your own vehicle, usually your team name.
+	 *
+	 * @return the vehicle name
+	 */
 	public String getName() {
 		return name;
 	}
 
+	/**
+	 * Returns the color of your own vehicle.
+	 *
+	 * @return the vehicle color
+	 */
 	public String getColor() {
 		return color;
 	}

@@ -1,7 +1,7 @@
 package gwbot.message;
 
 /**
- *
+ * Wraps messages so that all contain a common msgType for identification.
  * @author Goldwipf <goldwipf@beheh.de>
  */
 public class MessageWrapper {
