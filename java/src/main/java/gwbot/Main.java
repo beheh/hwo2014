@@ -82,9 +82,9 @@ public final class Main {
 			case "Nico Smeenk":
 				bot = new NicoBot(this);
 				break;
-			case "benedict":
-				bot = new BehEhBot(this);
-				break;
+			//case "benedict":
+			//	bot = new BehEhBot(this);
+			//	break;
 			default:
 				bot = new GoldwipfBot(this);
 				break;
@@ -155,7 +155,7 @@ public final class Main {
 					// somebody completed a lap
 					// @todo
 					break;
-				case "finished":
+				case "finish":
 					// somebody finished the race
 					// @todo
 					break;
