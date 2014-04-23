@@ -150,7 +150,11 @@ public final class Main {
 					bot.onTurboAvailable(turboAvailableMessage);
 					break;
 				case "lapFinished":
-					// completed a lap
+					// somebody completed a lap
+					// @todo
+					break;
+				case "finished":
+					// somebody finished the race
 					// @todo
 					break;
 				case "crash":
