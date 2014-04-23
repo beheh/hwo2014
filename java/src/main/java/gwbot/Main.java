@@ -41,7 +41,7 @@ public final class Main {
 
 	public static void main(String... args) {
 
-		System.out.println("This is GoldwipfBot, ready to go");
+		System.out.println("This is Team Goldwipf, ready to go");
 
 		String host = args[0];
 		int port = Integer.parseInt(args[1]);
@@ -79,14 +79,13 @@ public final class Main {
 		GenericBot bot = null;
 		switch (System.getProperty("user.name")) {
 			case "Nico Smeenk":
-				System.out.println("Use NicoBot");
 				bot = new NicoBot(this);
 				break;
 			default:
-				System.out.println("Use GoldwipfBot");
 				bot = new GoldwipfBot(this);
 				break;
 		}
+		System.out.println("Using " + bot.getClass().getSimpleName() + " as backend");
 
 		// send join message
 		System.out.print("Joining game...");
@@ -101,16 +100,13 @@ public final class Main {
 				continue;
 			}
 
-			if (!msgFromServer.msgType.equals("carPositions")) {
-				System.out.println("*" + msgFromServer.msgType);
-			}
-
 			boolean disconnect = false;
 			switch (msgFromServer.msgType) {
 				case "yourCar":
 					// receive details about your car
 					YourCarMessage yourCarMessage = gson.fromJson(msgFromServer.data.toString(), YourCarMessage.class);
-					System.out.println("we are the car " + yourCarMessage.getName() + " with color " + yourCarMessage.getColor());
+					System.out.print("Receiving car data...");
+					System.out.println(" \"" + yourCarMessage.getName() + "\", color is " + yourCarMessage.getColor());
 					bot.onYourCarMessage(yourCarMessage);
 					break;
 				case "gameInit":
@@ -118,6 +114,7 @@ public final class Main {
 					GameInitMessage gameInitMessage = gson.fromJson(msgFromServer.data.toString(), GameInitMessage.class);
 					Track track = gameInitMessage.getRace().getTrack();
 					List<Piece> pieces = track.getPieces();
+					System.out.print("Receiving track data...");
 					for (int i = 0; i < pieces.size(); i++) {
 						Piece piece = pieces.get(i);
 						piece.setNext(pieces.get((i + 1 + pieces.size()) % pieces.size()));
@@ -126,12 +123,13 @@ public final class Main {
 					/*for (Piece piece : pieces) {
 					 System.out.println(piece);
 					 }*/
-					System.out.println("track is " + track.getName() + " with " + track.getLanes().size() + " lanes");
+					System.out.println(" track is \"" + track.getName() + "\" with " + track.getLanes().size() + " lanes");
 					bot.onGameInitMessage(gameInitMessage);
 					break;
 				case "gameStart":
 					// start the current game with details specified in gameInit
 					GameStartMessage gameStartMessage = new GameStartMessage();
+					System.out.print("Starting game!");
 					bot.onGameStartMessage(gameStartMessage);
 					break;
 				case "carPositions":
@@ -144,6 +142,7 @@ public final class Main {
 				case "turboAvailable":
 					// turbo is available for a certain length
 					TurboAvailableMessage turboAvailableMessage = gson.fromJson(msgFromServer.data.toString(), TurboAvailableMessage.class);
+					System.out.print("Turbo is available.");
 					bot.onTurboAvailable(turboAvailableMessage);
 					break;
 				case "lapFinished":
@@ -152,28 +151,33 @@ public final class Main {
 					break;
 				case "crash":
 					// crashing
+					System.out.print("Crashed.");
 					// @todo
 					break;
 				case "spawn":
 					// respawn after crashing
+					System.out.print("Respawned after crash.");
 					// @todo
 					break;
 				case "gameEnd":
 					// current game has ended
 					GameEndMessage gameEndMessage = gson.fromJson(msgFromServer.data.toString(), GameEndMessage.class);
+					System.out.print("Game has ended.");
 					bot.onGameEndMessage(gameEndMessage);
 					break;
 				case "tournamentEnd":
 					disconnect = true;
 					// @todo
+					System.out.print("Tournament has ended.");					
 					break;
 				case "error":
-					System.err.println("received error: " + msgFromServer.data.toString());
-					System.err.println("last message was: " + lastMessage.toJson(gson));
+					System.err.println("Received error: " + msgFromServer.data.toString());
+					System.err.println("Last message was: " + lastMessage.toJson(gson));
 					break;
 				default:
 					// do nothing, return ping to acknowledge
 					send(new PingMessage());
+					System.out.println("Unknown message received: *" + msgFromServer.msgType);
 					break;
 			}
 
@@ -182,7 +186,7 @@ public final class Main {
 			}
 		}
 
-		System.out.println("disconnecting from server");
+		System.out.println("Disconnecting from server");
 		socket.close();
 	}
 
