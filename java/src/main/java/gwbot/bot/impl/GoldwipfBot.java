@@ -18,7 +18,7 @@ import gwbot.track.Track;
 import java.util.List;
 
 /**
- * 
+ *
  * @author Benedict Etzel <developer@beheh.de>
  */
 public class GoldwipfBot extends GenericBot {
@@ -82,7 +82,7 @@ public class GoldwipfBot extends GenericBot {
 		double angle = lastAngle = ownPositionMessage.getAngle();
 
 		if (currentPiece.isCurve()) {
-			System.out.println("speed " + speed + ", angle " + angle);
+			//System.out.println("speed " + speed + ", angle " + angle);
 		}
 
 		if (!switched && nextPiece.isSwitch()) {
