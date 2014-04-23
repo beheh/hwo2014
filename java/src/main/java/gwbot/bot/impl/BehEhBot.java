@@ -8,6 +8,7 @@ import gwbot.message.GameEndMessage;
 import gwbot.message.GameInitMessage;
 import gwbot.message.GameStartMessage;
 import gwbot.message.JoinMessage;
+import gwbot.message.PingMessage;
 import gwbot.message.SwitchLaneMessage;
 import gwbot.message.ThrottleMessage;
 import gwbot.message.TurboAvailableMessage;
@@ -31,7 +32,7 @@ public class BehEhBot extends GenericBot {
 	}
 
 	private Car ownCar;
-	
+
 	@Override
 	public void onYourCarMessage(YourCarMessage yourCarMessage) {
 		ownCar = yourCarMessage.getCar();
@@ -43,8 +44,16 @@ public class BehEhBot extends GenericBot {
 		this.track = race.getTrack();
 	}
 
+	boolean gameRunning = false;
+
 	@Override
 	public void onGameStartMessage(GameStartMessage gameStartMessage) {
+		gameRunning = true;
+	}
+
+	@Override
+	public void onGameEndMessage(GameEndMessage gameEndMessage) {
+		gameRunning = false;
 	}
 
 	@Override
@@ -59,14 +68,20 @@ public class BehEhBot extends GenericBot {
 
 	@Override
 	public void onCarPositions(List<CarPositionMessage> carPositionMessages) {
+		// ignore if no game is running
+		if (!gameRunning) {
+			send(new PingMessage());
+			return;
+		}
+
 		// find our position message
 		CarPositionMessage ownPositionMessage = null;
-		for(CarPositionMessage carPositionMessage : carPositionMessages) {
-			if(ownCar.equals(carPositionMessage.getCar())) {
+		for (CarPositionMessage carPositionMessage : carPositionMessages) {
+			if (ownCar.equals(carPositionMessage.getCar())) {
 				ownPositionMessage = carPositionMessage;
 			}
 		}
-		if(ownPositionMessage == null) {
+		if (ownPositionMessage == null) {
 			System.out.println("could not find own car position message");
 			return;
 		}
@@ -104,7 +119,7 @@ public class BehEhBot extends GenericBot {
 			return;
 		}
 
-		double throttle = 0.6d;
+		double throttle = 0.4d;
 		if (currentPiece.isCurve()) {
 			// throttle = 1 * Math.sin(Math.PI / currentPiece.getLength() *
 			// ownPositionMessage.getInPieceDistance());
@@ -120,9 +135,4 @@ public class BehEhBot extends GenericBot {
 	public void onTurboAvailable(TurboAvailableMessage turboAvailableMessage) {
 		turboAvailable = true;
 	}
-
-	@Override
-	public void onGameEndMessage(GameEndMessage gameEndMessage) {
-	}
-
 }

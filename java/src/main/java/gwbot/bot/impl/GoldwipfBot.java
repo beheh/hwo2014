@@ -8,6 +8,7 @@ import gwbot.message.GameEndMessage;
 import gwbot.message.GameInitMessage;
 import gwbot.message.GameStartMessage;
 import gwbot.message.JoinMessage;
+import gwbot.message.PingMessage;
 import gwbot.message.SwitchLaneMessage;
 import gwbot.message.ThrottleMessage;
 import gwbot.message.TurboAvailableMessage;
@@ -66,6 +67,12 @@ public class GoldwipfBot extends GenericBot {
 	@Override
 	public void onCarPositions(List<CarPositionMessage> carPositionMessages) {
 		
+		// ignore if no game is running
+		if(!gameRunning) {
+			send(new PingMessage());
+			return;
+		}
+		
 		// find our position message
 		CarPositionMessage ownPositionMessage = null;
 		for(CarPositionMessage carPositionMessage : carPositionMessages) {
@@ -77,6 +84,8 @@ public class GoldwipfBot extends GenericBot {
 			System.out.println("could not find own car position message");
 			return;
 		}
+		
+		// update current speed, friction coefficient
 
 		// check if we should switch lanes for minimum distance
 		if (checkForSwitch(race.getTrack().getPiece(ownPositionMessage.getPieceIndex()))) {
@@ -92,7 +101,7 @@ public class GoldwipfBot extends GenericBot {
 		
 		// do actual speed calculation, braking in curve, ABS for drifting...
 		
-		send(new ThrottleMessage(0.5));
+		send(new ThrottleMessage(0.4));
 	}
 
 	private Piece sentFor = null;
