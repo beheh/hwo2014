@@ -1,6 +1,6 @@
 ## Hello World Open (HWO) 2014 Goldwipf Bot
 
-This is Goldwipf Bot gwbot.
+This is the Goldwipf team bot system.
 
 ### File Structure And Scripts
 
