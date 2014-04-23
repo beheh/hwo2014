@@ -4,7 +4,7 @@ import gwbot.race.Race;
 
 /**
  *
- * @author benedict
+ * @author Benedict Etzel <developer@beheh.de>
  */
 public class GameInitMessage extends Message {
 

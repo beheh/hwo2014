@@ -28,8 +28,16 @@ public class Race {
 		return cars;
 	}
 
-	public RaceSession getRaceSession() {
-		return raceSession;
+	public int getLapCount() {
+		return raceSession.getLapCount();
+	}
+
+	public long maxLapTimeMs() {
+		return raceSession.getMaxLapTimeMs();
+	}
+
+	public boolean isQuickRace() {
+		return raceSession.isQuickRace();
 	}
 
 }

@@ -19,6 +19,8 @@ import gwbot.message.GameInitMessage;
 import gwbot.message.Message;
 import gwbot.message.MessageWrapper;
 import gwbot.gson.MessageWrapperExclStrat;
+import gwbot.message.GameEndMessage;
+import gwbot.message.GameStartMessage;
 import gwbot.message.TurboAvailableMessage;
 import gwbot.message.YourCarMessage;
 import gwbot.track.Piece;
@@ -54,7 +56,7 @@ public final class Main {
 			final BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream(), "utf-8"));
 
 			new Main(reader, writer, new JoinMessage(botName, botKey));
-		} catch (IOException ex) {
+		} catch(IOException ex) {
 			System.out.println("failed");
 			ex.printStackTrace(System.err);
 			System.exit(1);
@@ -80,59 +82,73 @@ public final class Main {
 		send(join);
 
 		// success, if we receive answer
-		while ((line = reader.readLine()) != null) {
+		while((line = reader.readLine()) != null) {
 			final MessageWrapper msgFromServer = gson.fromJson(line, MessageWrapper.class);
 
-			if (msgFromServer.msgType.equals("join")) {
+			if(msgFromServer.msgType.equals("join")) {
 				System.out.println(" accepted");
 				continue;
 			}
 
-			if (!msgFromServer.msgType.equals("carPositions")) {
+			if(!msgFromServer.msgType.equals("carPositions")) {
 				System.out.println("*" + msgFromServer.msgType);
 			}
 
 			boolean disconnect = false;
-			switch (msgFromServer.msgType) {
+			switch(msgFromServer.msgType) {
 				case "yourCar":
+					// receive details about your car
 					YourCarMessage yourCarMessage = gson.fromJson(msgFromServer.data.toString(), YourCarMessage.class);
 					System.out.println("we are the car " + yourCarMessage.getName() + " with color " + yourCarMessage.getColor());
 					bot.onYourCarMessage(yourCarMessage);
 					break;
 				case "gameInit":
+					// receive initial details about the following game
 					GameInitMessage gameInitMessage = gson.fromJson(msgFromServer.data.toString(), GameInitMessage.class);
 					Track track = gameInitMessage.getRace().getTrack();
 					Collection<Piece> pieces = track.getPieces();
-					for (Piece piece : pieces) {
+					for(Piece piece : pieces) {
 						System.out.println(piece);
 					}
 					System.out.println("track is " + track.getName() + " with " + track.getLanes().size() + " lanes");
 					bot.onGameInitMessage(gameInitMessage);
 					break;
 				case "gameStart":
+					// start the current game with details specified in gameInit
+					GameStartMessage gameStartMessage = new GameStartMessage();
+					bot.onGameStartMessage(gameStartMessage);
+					break;
+				case "carPositions":
+					// receive
+					Type carPositionsCollectionType = new TypeToken<ArrayList<CarPositionsMessage>>() {}.getType();
+					List<CarPositionsMessage> carPositions = gson.fromJson(msgFromServer.data.toString(), carPositionsCollectionType);
+					bot.onCarPositions(carPositions);
 					break;
 				case "turboAvailable":
 					// turbo is available for a certain length
 					TurboAvailableMessage turboAvailableMessage = gson.fromJson(msgFromServer.data.toString(), TurboAvailableMessage.class);
 					bot.onTurboAvailable(turboAvailableMessage);
 					break;
-				case "carPositions":
-					Type carPositionsCollectionType = new TypeToken<ArrayList<CarPositionsMessage>>() {
-					}.getType();
-					List<CarPositionsMessage> carPositions = gson.fromJson(msgFromServer.data.toString(), carPositionsCollectionType);
-					bot.onCarPositions(carPositions);
-					break;
 				case "lapFinished":
-					System.out.println("lap finished");
+					// completed a lap
+					// @todo
 					break;
 				case "crash":
+					// crashing
+					// @todo
 					break;
 				case "spawn":
+					// respawn after crashing
+					// @todo
 					break;
 				case "gameEnd":
+					// current game has ended
+					GameEndMessage gameEndMessage = gson.fromJson(msgFromServer.data.toString(), GameEndMessage.class);
+					bot.onGameEndMessage(gameEndMessage);
 					break;
 				case "tournamentEnd":
 					disconnect = true;
+					// @todo
 					break;
 				case "error":
 					System.out.println("last message was: " + lastMessage.toJson(gson));
@@ -143,7 +159,7 @@ public final class Main {
 					break;
 			}
 
-			if (disconnect) {
+			if(disconnect) {
 				break;
 			}
 		}

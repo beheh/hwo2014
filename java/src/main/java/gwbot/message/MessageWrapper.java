@@ -22,6 +22,10 @@ public class MessageWrapper {
 		this(sendMsg.msgType(), sendMsg.msgData(), null, 0);
 	}
 
+	public MessageWrapper(final Message sendMsg, int gameTick) {
+		this(sendMsg.msgType(), sendMsg.msgData(), null, gameTick);
+	}
+
 	public MessageWrapper(String msgType, Object data) {
 		this(msgType, data, null, 0);
 	}

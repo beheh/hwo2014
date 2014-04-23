@@ -2,7 +2,9 @@ package gwbot;
 
 import gwbot.bot.GenericBot;
 import gwbot.message.CarPositionsMessage;
+import gwbot.message.GameEndMessage;
 import gwbot.message.GameInitMessage;
+import gwbot.message.GameStartMessage;
 import gwbot.message.JoinMessage;
 import gwbot.message.ThrottleMessage;
 import gwbot.message.TurboAvailableMessage;
@@ -25,17 +27,21 @@ public class GoldwipfBot extends GenericBot {
 	}
 
 	@Override
+	public void onYourCarMessage(YourCarMessage yourCarMessage) {
+	}
+
+	@Override
 	public void onGameInitMessage(GameInitMessage gameInitMessage) {
 		Race race = gameInitMessage.getRace();
 		this.track = race.getTrack();
 	}
 
 	@Override
-	public void onJoinMessage(JoinMessage joinMessage) {
+	public void onGameStartMessage(GameStartMessage gameStartMessage) {
 	}
 
 	@Override
-	public void onYourCarMessage(YourCarMessage yourCarMessage) {
+	public void onJoinMessage(JoinMessage joinMessage) {
 	}
 
 	private double lastProgression;
@@ -88,9 +94,15 @@ public class GoldwipfBot extends GenericBot {
 		send(new ThrottleMessage(throttle));
 	}
 
+	private boolean turboAvailable = false;
+
 	@Override
 	public void onTurboAvailable(TurboAvailableMessage turboAvailableMessage) {
+		turboAvailable = true;
+	}
 
+	@Override
+	public void onGameEndMessage(GameEndMessage gameEndMessage) {
 	}
 
 }
