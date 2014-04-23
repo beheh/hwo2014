@@ -33,7 +33,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 /**
- * 
+ *
  * @author Goldwipf <goldwipf@beheh.de>
  */
 public final class Main {
