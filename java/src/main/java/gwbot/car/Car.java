@@ -32,4 +32,24 @@ public class Car {
 		return color;
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null) {
+			return false;
+		}
+		if (getClass() != o.getClass()) {
+			return false;
+		}
+		Car car = (Car) o;
+		if (!getName().equals(car.getName())) {
+			return false;
+		}
+		if (!getColor().equals(car.getColor())) {
+			return false;
+		}
+		return true;
+	}
 }

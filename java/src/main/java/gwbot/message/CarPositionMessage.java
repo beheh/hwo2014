@@ -1,5 +1,7 @@
 package gwbot.message;
 
+import com.google.gson.annotations.SerializedName;
+import gwbot.car.Car;
 import gwbot.car.PiecePosition;
 
 /**
@@ -10,10 +12,13 @@ public class CarPositionMessage extends Message {
 
 	private final double angle;
 	private final PiecePosition piecePosition;
+	@SerializedName("id")
+	private final Car car;
 
-	public CarPositionMessage(double angle, PiecePosition piecePosition) {
+	public CarPositionMessage(double angle, PiecePosition piecePosition, Car car) {
 		this.angle = angle;
 		this.piecePosition = piecePosition;
+		this.car = car;
 	}
 
 	@Override
@@ -68,10 +73,14 @@ public class CarPositionMessage extends Message {
 
 	/**
 	 * Returns the lap the car is currently in.
+	 *
 	 * @return -1 before starting line pass, >= 0 for subsequent laps
 	 */
 	public int getLap() {
 		return piecePosition.getLap();
 	}
 
+	public Car getCar() {
+		return car;
+	}
 }
