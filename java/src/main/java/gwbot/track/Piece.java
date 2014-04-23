@@ -25,6 +25,7 @@ public class Piece {
 	 * Returns the track length of this piece on the centerline.
 	 *
 	 * @return the piece length
+	 * @deprecated
 	 */
 	public double getLength() {
 		return getLength(new Lane(0, 0));
