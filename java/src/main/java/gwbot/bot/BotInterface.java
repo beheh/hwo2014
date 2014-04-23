@@ -23,7 +23,7 @@ public interface BotInterface {
 
 	public void onJoinMessage(JoinMessage joinMessage);
 
-	public void onCarPositions(List<CarPositionMessage> carPositionsMessage);
+	public void onCarPositions(List<CarPositionMessage> carPositionMessage);
 
 	public void onTurboAvailable(TurboAvailableMessage turboAvailableMessage);
 
