@@ -1,23 +1,23 @@
 /**
  * Copyright (c) 2011-2014 blackshark production by Nico Smeenk
  */
-package gwbot.track.extendet;
+package gwbot.track.extended;
 
 import gwbot.track.Piece;
 
 /**
  * TODO Description
- * 
+ *
  * @author Nico Smeenk
- * 
+ *
  */
-public class ExtendetPiece extends Piece {
+public class ExtendedPiece extends Piece {
 
-	private ExtendetPiece _next;
-	private ExtendetPiece _prev;
+	private ExtendedPiece _next;
+	private ExtendedPiece _prev;
 
 	/**
-	 * 
+	 *
 	 * @param pLength
 	 * @param pIsSwitch
 	 * @param pRadius
@@ -25,31 +25,29 @@ public class ExtendetPiece extends Piece {
 	 * @param pNext
 	 * @param pPrev
 	 */
-	public ExtendetPiece(Piece pOld) {
+	public ExtendedPiece(Piece pOld) {
 		super(pOld.getLength(), pOld.isSwitch(), pOld.getRadius(), pOld.getAngle());
 	}
 
 	/**
-	 * @param pNext
-	 *            the next to set
+	 * @param pNext the next to set
 	 */
-	public void setNext(ExtendetPiece pNext) {
+	public void setNext(ExtendedPiece pNext) {
 		_next = pNext;
 	}
 
 	/**
-	 * @param pPrev
-	 *            the prev to set
+	 * @param pPrev the prev to set
 	 */
-	public void setPrev(ExtendetPiece pPrev) {
+	public void setPrev(ExtendedPiece pPrev) {
 		_prev = pPrev;
 	}
 
-	public ExtendetPiece next() {
+	public ExtendedPiece next() {
 		return _next;
 	}
 
-	public ExtendetPiece prev() {
+	public ExtendedPiece prev() {
 		return _prev;
 	}
 
