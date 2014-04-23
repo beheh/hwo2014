@@ -13,8 +13,6 @@ import gwbot.message.TurboAvailableMessage;
 import gwbot.message.YourCarMessage;
 import gwbot.race.Race;
 import gwbot.track.Piece;
-import gwbot.track.Track;
-
 import java.util.List;
 
 /**
@@ -23,93 +21,96 @@ import java.util.List;
  */
 public class GoldwipfBot extends GenericBot {
 
-	private Track track;
-
 	public GoldwipfBot(Main main) {
 		super(main);
 	}
 
-	@Override
-	public void onYourCarMessage(YourCarMessage yourCarMessage) {
-	}
+	private Race race;
 
 	@Override
 	public void onGameInitMessage(GameInitMessage gameInitMessage) {
-		Race race = gameInitMessage.getRace();
-		this.track = race.getTrack();
+		race = gameInitMessage.getRace();
 	}
+
+	private String ownCarColor = "";
+
+	@Override
+	public void onYourCarMessage(YourCarMessage yourCarMessage) {
+		ownCarColor = yourCarMessage.getColor();
+	}
+
+	private boolean gameRunning = false;
 
 	@Override
 	public void onGameStartMessage(GameStartMessage gameStartMessage) {
+		gameRunning = true;
+	}
+
+	@Override
+	public void onGameEndMessage(GameEndMessage gameEndMessage) {
+		gameRunning = false;
 	}
 
 	@Override
 	public void onJoinMessage(JoinMessage joinMessage) {
 	}
 
-	private double lastProgression;
-	private double speed;
-	private double lastSpeed;
-	private double lastAngle;
-	private boolean switched = false;
-
-	@Override
-	public void onCarPositions(List<CarPositionMessage> carPositionMessages) {
-		CarPositionMessage ownPositionMessage = carPositionMessages.get(0);
-
-		Piece currentPiece = track.getPiece(ownPositionMessage.getPieceIndex());
-		Piece nextPiece = track.getPiece((ownPositionMessage.getPieceIndex() + 1) % track.getPieceCount());
-		ownPositionMessage.getInPieceDistance();
-
-		// update speedl
-		if (lastProgression < ownPositionMessage.getInPieceDistance()) {
-			lastSpeed = speed;
-			speed = ownPositionMessage.getInPieceDistance() - lastProgression;
-		}
-		else {
-			// last piece length - progression from last piece + progressio
-		}
-		lastProgression = ownPositionMessage.getInPieceDistance();
-
-		// distance to next piece
-		double distance = currentPiece.getLength() - ownPositionMessage.getInPieceDistance();
-
-		// calculate angledifference
-		double angleDifference = 0.0d;
-		if (currentPiece.isCurve()) {
-			angleDifference = Math.abs(ownPositionMessage.getAngle()) - Math.abs(lastAngle);
-		}
-		double angle = lastAngle = ownPositionMessage.getAngle();
-
-		if (currentPiece.isCurve()) {
-			//System.out.println("speed " + speed + ", angle " + angle);
-		}
-
-		if (!switched && nextPiece.isSwitch()) {
-			send(new SwitchLaneMessage(SwitchLaneMessage.Direction.RIGHT));
-			switched = true;
-			return;
-		}
-
-		double throttle = 0.6d;
-		if (currentPiece.isCurve()) {
-			// throttle = 1 * Math.sin(Math.PI / currentPiece.getLength() *
-			// ownPositionMessage.getInPieceDistance());
-			// System.out.println(Math.PI / currentPiece.getLength() *
-			// ownPositionMessage.getInPieceDistance() + "throttle "+throttle);
-		}
-		send(new ThrottleMessage(throttle));
-	}
-
-	private boolean turboAvailable = false;
+	private TurboAvailableMessage turboAvailableMessage = null;
 
 	@Override
 	public void onTurboAvailable(TurboAvailableMessage turboAvailableMessage) {
-		turboAvailable = true;
+		this.turboAvailableMessage = turboAvailableMessage;
 	}
 
 	@Override
-	public void onGameEndMessage(GameEndMessage gameEndMessage) {
+	public void onCarPositions(List<CarPositionMessage> carPositionMessage) {
+		CarPositionMessage ownPositionMessage = carPositionMessage.get(0);
+
+		// check if we should switch lanes for minimum distance
+		if (checkForSwitch(race.getTrack().getPiece(ownPositionMessage.getPieceIndex()))) {
+			System.out.println("Switched lane.");
+			return;
+		}
+		
+		// check for turbo
+		
+		// with other cars:
+		// check if car is just ahead (look for next switch to overtake, or use it to break next curve)
+		// check for car approaching faster from behind (brake in advance)
+		
+		// do actual speed calculation, braking in curve, ABS for drifting...
+		
+		send(new ThrottleMessage(0.5));
 	}
 
+	private Piece sentFor = null;
+
+	private boolean checkForSwitch(Piece currentPiece) {
+
+		Piece nextPiece = currentPiece.next();
+		if (nextPiece != sentFor && nextPiece.isSwitch()) {
+			double angToNextSwitch = 0;
+			// add all curve angles until next switch
+			Piece piece = nextPiece.next();
+			while (!piece.isSwitch()) {
+				angToNextSwitch += piece.getAngle();
+				piece = piece.next();
+			}
+			// if next switch is also a curve, add half of the angle
+			if (nextPiece.isCurve()) {
+				angToNextSwitch += (nextPiece.getAngle() / 2);
+			}
+			// if necessary, send the switch
+			if (angToNextSwitch == 0) {
+				return false;
+			} if (angToNextSwitch > 0) {
+				send(new SwitchLaneMessage(SwitchLaneMessage.Direction.RIGHT));
+			} else {
+				send(new SwitchLaneMessage(SwitchLaneMessage.Direction.LEFT));
+			}
+			sentFor = nextPiece;
+			return true;
+		}
+		return false;
+	}
 }

@@ -30,6 +30,7 @@ import java.util.List;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import gwbot.bot.impl.BehEhBot;
 
 /**
  *
@@ -80,6 +81,9 @@ public final class Main {
 		switch (System.getProperty("user.name")) {
 			case "Nico Smeenk":
 				bot = new NicoBot(this);
+				break;
+			case "benedict":
+				bot = new BehEhBot(this);
 				break;
 			default:
 				bot = new GoldwipfBot(this);
@@ -186,7 +190,7 @@ public final class Main {
 			}
 		}
 
-		System.out.println("Disconnecting from server");
+		System.out.println("Disconnecting from server.");
 		socket.close();
 	}
 
