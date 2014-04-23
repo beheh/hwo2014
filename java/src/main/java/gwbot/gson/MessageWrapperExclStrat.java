@@ -17,7 +17,7 @@ public class MessageWrapperExclStrat implements ExclusionStrategy {
 
 	@Override
 	public boolean shouldSkipField(FieldAttributes f) {
-		return (f.getDeclaringClass() == MessageWrapper.class && !f.getName().equals("msgType") && !f.getName().equals("data"));
+		return (f.getDeclaringClass() == MessageWrapper.class && !f.getName().equals("msgType") && !f.getName().equals("data") && !f.getName().equals("gameTick"));
 	}
 
 }

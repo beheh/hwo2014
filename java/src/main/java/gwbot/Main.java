@@ -37,27 +37,27 @@ import gwbot.bot.impl.BehEhBot;
  * @author Goldwipf <goldwipf@beheh.de>
  */
 public final class Main {
-
+	
 	private static Socket socket;
-
+	
 	public static void main(String... args) {
-
+		
 		System.out.println("This is Team Goldwipf, ready to go");
-
+		
 		String host = args[0];
 		int port = Integer.parseInt(args[1]);
 		String botName = args[2];
 		String botKey = args[3];
-
+		
 		System.out.print("Connecting to " + host + ":" + port + " as " + botName + "/" + botKey + "...");
-
+		
 		try {
 			socket = new Socket(host, port);
 			System.out.println(" connected");
-
+			
 			final PrintWriter writer = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(), "utf-8"));
 			final BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream(), "utf-8"));
-
+			
 			new Main(reader, writer, new JoinMessage(botName, botKey));
 		}
 		catch (IOException ex) {
@@ -66,17 +66,17 @@ public final class Main {
 			System.exit(1);
 		}
 	}
-
+	
 	public final Gson gson;
 	private final PrintWriter writer;
-
+	
 	public Main(final BufferedReader reader, final PrintWriter writer, final JoinMessage join) throws IOException {
-
+		
 		gson = new GsonBuilder().setExclusionStrategies(new MessageWrapperExclStrat()).create();
-
+		
 		this.writer = writer;
 		String line = null;
-
+		
 		GenericBot bot = null;
 		switch (System.getProperty("user.name")) {
 			case "Nico Smeenk":
@@ -98,12 +98,12 @@ public final class Main {
 		// success, if we receive answer
 		while ((line = reader.readLine()) != null) {
 			final MessageWrapper msgFromServer = gson.fromJson(line, MessageWrapper.class);
-
+			
 			if (msgFromServer.msgType.equals("join")) {
 				System.out.println(" accepted");
 				continue;
 			}
-
+			
 			boolean disconnect = false;
 			switch (msgFromServer.msgType) {
 				case "yourCar":
@@ -141,7 +141,9 @@ public final class Main {
 					Type carPositionsCollectionType = new TypeToken<ArrayList<CarPositionMessage>>() {
 					}.getType();
 					List<CarPositionMessage> carPositions = gson.fromJson(msgFromServer.data.toString(), carPositionsCollectionType);
+					currentTick = msgFromServer.gameTick;					
 					bot.onCarPositions(carPositions);
+					currentTick = null;
 					break;
 				case "turboAvailable":
 					// turbo is available for a certain length
@@ -188,19 +190,23 @@ public final class Main {
 					System.out.println("Unknown message received: *" + msgFromServer.msgType);
 					break;
 			}
-
+			
 			if (disconnect) {
 				break;
 			}
 		}
-
+		
 		System.out.println("Disconnecting from server.");
 		socket.close();
 	}
-
-	private Message lastMessage;
-
+	
+	private Message lastMessage = null;
+	private Integer currentTick = null;
+	
 	public void send(final Message message) {
+		if (currentTick != null) {
+			message.setGameTick(currentTick);
+		}
 		lastMessage = message;
 		writer.println(message.toJson(gson));
 		writer.flush();

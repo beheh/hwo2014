@@ -8,9 +8,9 @@ import com.google.gson.Gson;
  */
 public abstract class Message {
 
-	private int gameTick = 0;
+	private Integer gameTick = 0;
 
-	public void setGameTick(int gameTick) {
+	public void setGameTick(Integer gameTick) {
 		this.gameTick = gameTick;
 	}
 
