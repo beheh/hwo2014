@@ -164,7 +164,8 @@ public final class Main {
 					// @todo
 					break;
 				case "error":
-					System.out.println("last message was: " + lastMessage.toJson(gson));
+					System.err.println("received error: " + msgFromServer.data.toString());
+					System.err.println("last message was: " + lastMessage.toJson(gson));
 					break;
 				default:
 					// do nothing, return ping to acknowledge
