@@ -129,7 +129,7 @@ public final class Main {
 				case "gameStart":
 					// start the current game with details specified in gameInit
 					GameStartMessage gameStartMessage = new GameStartMessage();
-					System.out.print("Starting game!");
+					System.out.println("Starting game!");
 					bot.onGameStartMessage(gameStartMessage);
 					break;
 				case "carPositions":
