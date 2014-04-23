@@ -142,7 +142,7 @@ public final class Main {
 				case "turboAvailable":
 					// turbo is available for a certain length
 					TurboAvailableMessage turboAvailableMessage = gson.fromJson(msgFromServer.data.toString(), TurboAvailableMessage.class);
-					System.out.print("Turbo is available.");
+					System.out.println("Turbo is available.");
 					bot.onTurboAvailable(turboAvailableMessage);
 					break;
 				case "lapFinished":
@@ -151,24 +151,24 @@ public final class Main {
 					break;
 				case "crash":
 					// crashing
-					System.out.print("Crashed.");
+					System.out.println("Crashed.");
 					// @todo
 					break;
 				case "spawn":
 					// respawn after crashing
-					System.out.print("Respawned after crash.");
+					System.out.println("Respawned after crash.");
 					// @todo
 					break;
 				case "gameEnd":
 					// current game has ended
 					GameEndMessage gameEndMessage = gson.fromJson(msgFromServer.data.toString(), GameEndMessage.class);
-					System.out.print("Game has ended.");
+					System.out.println("Game has ended.");
 					bot.onGameEndMessage(gameEndMessage);
 					break;
 				case "tournamentEnd":
 					disconnect = true;
 					// @todo
-					System.out.print("Tournament has ended.");					
+					System.out.println("Tournament has ended.");					
 					break;
 				case "error":
 					System.err.println("Received error: " + msgFromServer.data.toString());
