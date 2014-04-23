@@ -2,6 +2,7 @@ package gwbot.bot.impl;
 
 import gwbot.Main;
 import gwbot.bot.GenericBot;
+import gwbot.car.Car;
 import gwbot.message.CarPositionMessage;
 import gwbot.message.GameEndMessage;
 import gwbot.message.GameInitMessage;
@@ -32,11 +33,11 @@ public class GoldwipfBot extends GenericBot {
 		race = gameInitMessage.getRace();
 	}
 
-	private String ownCarColor = "";
+	private Car ownCar = null;
 
 	@Override
 	public void onYourCarMessage(YourCarMessage yourCarMessage) {
-		ownCarColor = yourCarMessage.getColor();
+		ownCar = yourCarMessage.getCar();
 	}
 
 	private boolean gameRunning = false;
@@ -63,8 +64,19 @@ public class GoldwipfBot extends GenericBot {
 	}
 
 	@Override
-	public void onCarPositions(List<CarPositionMessage> carPositionMessage) {
-		CarPositionMessage ownPositionMessage = carPositionMessage.get(0);
+	public void onCarPositions(List<CarPositionMessage> carPositionMessages) {
+		
+		// find our position message
+		CarPositionMessage ownPositionMessage = null;
+		for(CarPositionMessage carPositionMessage : carPositionMessages) {
+			if(ownCar.equals(carPositionMessage.getCar())) {
+				ownPositionMessage = carPositionMessage;
+			} 
+		}
+		if(ownPositionMessage == null) {
+			System.out.println("could not find own car position message");
+			return;
+		}
 
 		// check if we should switch lanes for minimum distance
 		if (checkForSwitch(race.getTrack().getPiece(ownPositionMessage.getPieceIndex()))) {

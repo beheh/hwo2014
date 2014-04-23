@@ -2,6 +2,7 @@ package gwbot.bot.impl;
 
 import gwbot.Main;
 import gwbot.bot.GenericBot;
+import gwbot.car.Car;
 import gwbot.message.CarPositionMessage;
 import gwbot.message.GameEndMessage;
 import gwbot.message.GameInitMessage;
@@ -29,8 +30,11 @@ public class BehEhBot extends GenericBot {
 		super(main);
 	}
 
+	private Car ownCar;
+	
 	@Override
 	public void onYourCarMessage(YourCarMessage yourCarMessage) {
+		ownCar = yourCarMessage.getCar();
 	}
 
 	@Override
@@ -55,7 +59,17 @@ public class BehEhBot extends GenericBot {
 
 	@Override
 	public void onCarPositions(List<CarPositionMessage> carPositionMessages) {
-		CarPositionMessage ownPositionMessage = carPositionMessages.get(0);
+		// find our position message
+		CarPositionMessage ownPositionMessage = null;
+		for(CarPositionMessage carPositionMessage : carPositionMessages) {
+			if(ownCar.equals(carPositionMessage.getCar())) {
+				ownPositionMessage = carPositionMessage;
+			}
+		}
+		if(ownPositionMessage == null) {
+			System.out.println("could not find own car position message");
+			return;
+		}
 
 		Piece currentPiece = track.getPiece(ownPositionMessage.getPieceIndex());
 		Piece nextPiece = track.getPiece((ownPositionMessage.getPieceIndex() + 1) % track.getPieceCount());
