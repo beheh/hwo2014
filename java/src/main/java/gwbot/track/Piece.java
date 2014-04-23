@@ -41,7 +41,7 @@ public class Piece {
 		return angle > 0;
 	}
 
-	public double getRadius() {
+	public int getRadius() {
 		return radius;
 	}
 

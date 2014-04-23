@@ -1,5 +1,6 @@
-package gwbot;
+package gwbot.bot.impl;
 
+import gwbot.Main;
 import gwbot.bot.GenericBot;
 import gwbot.message.CarPositionsMessage;
 import gwbot.message.GameEndMessage;
@@ -13,10 +14,11 @@ import gwbot.message.YourCarMessage;
 import gwbot.race.Race;
 import gwbot.track.Piece;
 import gwbot.track.Track;
+
 import java.util.List;
 
 /**
- *
+ * 
  * @author Benedict Etzel <developer@beheh.de>
  */
 public class GoldwipfBot extends GenericBot {
@@ -60,11 +62,12 @@ public class GoldwipfBot extends GenericBot {
 		ownPositionMessage.getInPieceDistance();
 
 		// update speedl
-		if(lastProgression < ownPositionMessage.getInPieceDistance()) {
+		if (lastProgression < ownPositionMessage.getInPieceDistance()) {
 			lastSpeed = speed;
 			speed = ownPositionMessage.getInPieceDistance() - lastProgression;
-		} else {
-			//last piece length - progression from last piece + progressio
+		}
+		else {
+			// last piece length - progression from last piece + progressio
 		}
 		lastProgression = ownPositionMessage.getInPieceDistance();
 
@@ -73,25 +76,27 @@ public class GoldwipfBot extends GenericBot {
 
 		// calculate angledifference
 		double angleDifference = 0.0d;
-		if(currentPiece.isCurve()) {
+		if (currentPiece.isCurve()) {
 			angleDifference = Math.abs(ownPositionMessage.getAngle()) - Math.abs(lastAngle);
 		}
 		double angle = lastAngle = ownPositionMessage.getAngle();
 
-		if(currentPiece.isCurve()) {
+		if (currentPiece.isCurve()) {
 			System.out.println("speed " + speed + ", angle " + angle);
 		}
 
-		if(!switched && nextPiece.isSwitch()) {
+		if (!switched && nextPiece.isSwitch()) {
 			send(new SwitchLaneMessage(SwitchLaneMessage.Direction.RIGHT));
 			switched = true;
 			return;
 		}
 
 		double throttle = 0.6d;
-		if(currentPiece.isCurve()) {
-			//throttle = 1 * Math.sin(Math.PI / currentPiece.getLength() * ownPositionMessage.getInPieceDistance());
-			//System.out.println(Math.PI / currentPiece.getLength() * ownPositionMessage.getInPieceDistance() + "throttle "+throttle);
+		if (currentPiece.isCurve()) {
+			// throttle = 1 * Math.sin(Math.PI / currentPiece.getLength() *
+			// ownPositionMessage.getInPieceDistance());
+			// System.out.println(Math.PI / currentPiece.getLength() *
+			// ownPositionMessage.getInPieceDistance() + "throttle "+throttle);
 		}
 		send(new ThrottleMessage(throttle));
 	}
