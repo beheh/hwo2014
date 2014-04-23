@@ -16,15 +16,6 @@ public class ExtendedPiece extends Piece {
 	private ExtendedPiece _next;
 	private ExtendedPiece _prev;
 
-	/**
-	 *
-	 * @param pLength
-	 * @param pIsSwitch
-	 * @param pRadius
-	 * @param pAngle
-	 * @param pNext
-	 * @param pPrev
-	 */
 	public ExtendedPiece(Piece pOld) {
 		super(pOld.getLength(), pOld.isSwitch(), pOld.getRadius(), pOld.getAngle());
 	}
