@@ -23,6 +23,7 @@ public class CarPositionsMessage extends Message {
 
 	/**
 	 * Returns the current angle of the car relative to the track.
+	 *
 	 * @return the current angle
 	 */
 	public double getAngle() {
@@ -31,6 +32,7 @@ public class CarPositionsMessage extends Message {
 
 	/**
 	 * Returns the index of the track piece the car is currently on.
+	 *
 	 * @return the piece index
 	 */
 	public int getPieceIndex() {
@@ -39,12 +41,35 @@ public class CarPositionsMessage extends Message {
 
 	/**
 	 * Returns the distance the car has traveled on the current piece.
-	 * @return 
+	 *
+	 * @return
 	 */
 	public double getInPieceDistance() {
 		return piecePosition.getInPieceDistance();
 	}
 
+	/**
+	 * Returns the index of the lane the car will be in at the end of the current piece.
+	 *
+	 * @return the lane index
+	 */
+	public int getEndLaneIndex() {
+		return piecePosition.getEndLaneIndex();
+	}
+
+	/**
+	 * Returns the index of the lane the car was at the end of the current piece.
+	 *
+	 * @return the lane index
+	 */
+	public int getStartLaneIndex() {
+		return piecePosition.getStartLaneIndex();
+	}
+
+	/**
+	 * Returns the lap the car is currently in.
+	 * @return -1 before starting line pass, >= 0 for subsequent laps
+	 */
 	public int getLap() {
 		return piecePosition.getLap();
 	}
