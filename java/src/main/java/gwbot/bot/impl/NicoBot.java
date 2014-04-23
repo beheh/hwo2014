@@ -15,9 +15,7 @@ import gwbot.message.YourCarMessage;
 import gwbot.race.Race;
 import gwbot.track.Piece;
 import gwbot.track.Track;
-import gwbot.track.extended.ExtendedPiece;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -37,16 +35,6 @@ public class NicoBot extends GenericBot {
 
 		Race race = gameInitMessage.getRace();
 		this._track = race.getTrack();
-		List<Piece> extendetPieces = new ArrayList<>();
-		for (int index = 0; index < _track.getPieceCount(); index++) {
-			extendetPieces.add(new ExtendedPiece(_track.getPiece(index)));
-		}
-		for (int index = 0; index < _track.getPieceCount(); index++) {
-			ExtendedPiece piece = (ExtendedPiece) extendetPieces.get(index);
-			piece.setNext((ExtendedPiece) extendetPieces.get((index + 1 + extendetPieces.size()) % extendetPieces.size()));
-			piece.setPrev((ExtendedPiece) extendetPieces.get((index - 1 + extendetPieces.size()) % extendetPieces.size()));
-		}
-		_track = new Track(_track.getId(), _track.getName(), extendetPieces, _track.getLanes(), _track.getStartingPoint());
 	}
 
 	@Override
@@ -58,12 +46,40 @@ public class NicoBot extends GenericBot {
 	}
 
 	private Piece sendFor = null;
+	private int _tic = 0;
+	private CarPositionsMessage _lastPosition = null;
 
 	@Override
 	public void onCarPositions(List<CarPositionsMessage> carPositionsMessages) {
 		CarPositionsMessage ownPositionMessage = carPositionsMessages.get(0);
 
-		ExtendedPiece currentPiece = (ExtendedPiece) _track.getPiece(ownPositionMessage.getPieceIndex());
+		// Geschwindigkeit pro tic berechnen
+		_tic++;
+		if (_tic == 10) {
+			_tic = 0;
+			if (_lastPosition != null) {
+				double v = 0;
+				Piece curPiece = _track.getPiece(ownPositionMessage.getPieceIndex());
+				Piece lastPiece = _track.getPiece(_lastPosition.getPieceIndex());
+				if (curPiece == lastPiece) {
+					v = ownPositionMessage.getInPieceDistance() - _lastPosition.getInPieceDistance();
+				}
+				else {
+					v += (lastPiece.getLength() - _lastPosition.getInPieceDistance());
+					Piece next = lastPiece.next();
+					while (next != curPiece) {
+						v += next.getLength();
+						next = next.next();
+					}
+					v += ownPositionMessage.getInPieceDistance();
+				}
+				System.out.println(v + "/10tic");
+			}
+			_lastPosition = ownPositionMessage;
+		}
+		// --
+
+		Piece currentPiece = (Piece) _track.getPiece(ownPositionMessage.getPieceIndex());
 		ownPositionMessage.getInPieceDistance();
 
 		if (currentPiece.next() != sendFor && currentPiece.next().isSwitch()) {
@@ -74,7 +90,7 @@ public class NicoBot extends GenericBot {
 				angToNextSwitch += (currentPiece.next().getAngle() / 2);
 			}
 			// gesamtkurvenwinkel bis zum nächsten Switch berechnen
-			ExtendedPiece piece = currentPiece.next().next();
+			Piece piece = currentPiece.next().next();
 			while (!piece.isSwitch()) {
 				angToNextSwitch += piece.getAngle();
 				piece = piece.next();
