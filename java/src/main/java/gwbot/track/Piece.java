@@ -22,11 +22,24 @@ public class Piece {
 	}
 
 	/**
-	 * Returns the length of this piece.
+	 * Returns the track length of this piece on the centerline.
 	 *
 	 * @return the piece length
 	 */
 	public double getLength() {
+		return getLength(new Lane(0, 0));
+	}
+
+	/**
+	 * Returns the track length of this piece on the current lane.
+	 *
+	 * @return the piece length
+	 */
+	public double getLength(Lane lane) {
+		if(length == 0 && (radius != 0 || angle != 0)) {
+			double curveRadius = radius + lane.distanceFromCenter;
+			return (2d * Math.PI * curveRadius) * Math.abs(angle) / 360;
+		}
 		return length;
 	}
 
@@ -58,7 +71,7 @@ public class Piece {
 	}
 
 	/**
-	 * Returns whether this piece is a curve.
+	 * Returns whether this xpiece is a curve.
 	 *
 	 * @return true, if piece is a right curve
 	 */
@@ -86,12 +99,12 @@ public class Piece {
 
 	@Override
 	public String toString() {
-		String msg = "piece with length " + length;
+		String msg = "piece with length " + getLength();
 		if (angle != 0) {
-			msg += ", angle " + angle;
+			msg += ", angle " + getAngle();
 		}
 		if (radius != 0) {
-			msg += ", radius " + radius;
+			msg += ", radius " + getRadius();
 		}
 		if (isSwitch) {
 			msg += " (is a switch)";
