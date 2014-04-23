@@ -17,7 +17,7 @@ import java.util.List;
 
 /**
  *
- * @author Benedict Etzel <developer@beheh.de>
+ * @author Team Goldwipf <goldwipf@beheh.de>
  */
 public class GoldwipfBot extends GenericBot {
 
