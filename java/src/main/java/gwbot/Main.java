@@ -3,7 +3,7 @@ package gwbot;
 import gwbot.bot.GenericBot;
 import gwbot.bot.impl.GoldwipfBot;
 import gwbot.bot.impl.NicoBot;
-import gwbot.gson.MessageWrapperExclStrat;
+import gwbot.gson.HwoJsonExclusionStrategy;
 import gwbot.message.CarPositionMessage;
 import gwbot.message.GameEndMessage;
 import gwbot.message.GameInitMessage;
@@ -86,8 +86,8 @@ public final class Main {
 	public Main(final BufferedReader reader, final PrintWriter writer, final Message join, final GenericBot bot) throws IOException {
 
 		bot.setMain(this);
-		
-		gson = new GsonBuilder().setExclusionStrategies(new MessageWrapperExclStrat()).create();
+
+		gson = new GsonBuilder().setExclusionStrategies(new HwoJsonExclusionStrategy()).create();
 
 		this.writer = writer;
 		String line = null;
@@ -195,7 +195,7 @@ public final class Main {
 					System.out.println("Unknown message received: *" + msgFromServer.msgType);
 					break;
 			}
-			
+
 			lastReceived = msgFromServer;
 
 			if (disconnect) {
