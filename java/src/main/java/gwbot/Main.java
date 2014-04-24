@@ -203,7 +203,10 @@ public final class Main {
 
 			if(ciDebug <= 5) {
 				System.err.println("  CI-Debug: Received " + gson.toJson(lastReceived));
-				System.err.println("  CI-Debug: Sent " + lastSent.toJson(gson));
+				if(lastSent != null) {
+					System.err.println("  CI-Debug: Sent " + lastSent.toJson(gson));
+				}
+				lastSent = null;
 			}
 
 			if (disconnect) {
