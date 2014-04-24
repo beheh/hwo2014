@@ -70,9 +70,9 @@ public class GoldwipfBot extends GenericBot {
 	@Override
 	public void onCarPositions(List<CarPositionMessage> carPositionMessages) {
 
-		// ignore if no game is running
+		//just set throttle to 1 for next race if no game is running
 		if (!gameRunning) {
-			send(new PingMessage());
+			send(new ThrottleMessage(1));
 			return;
 		}
 

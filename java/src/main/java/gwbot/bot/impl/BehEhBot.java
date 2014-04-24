@@ -75,9 +75,9 @@ public class BehEhBot extends GenericBot {
 
 	@Override
 	public void onCarPositions(List<CarPositionMessage> carPositionMessages) {
-		// ignore if no game is running
+		//just set throttle to 1 for next race if no game is running
 		if (!gameRunning) {
-			send(new PingMessage());
+			send(new ThrottleMessage(1));
 			return;
 		}
 
@@ -94,7 +94,7 @@ public class BehEhBot extends GenericBot {
 		}
 		Piece currentPiece = track.getPiece(ownPositionMessage.getPieceIndex());
 
-		double throttle = 1.1d;
+		double throttle = 0.5d;
 
 		if (currentPiece.isCurve()) {
 			double absAngle = Math.abs(ownPositionMessage.getAngle());
