@@ -31,6 +31,10 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import gwbot.bot.impl.BehEhBot;
+import gwbot.message.CrashMessage;
+import gwbot.message.DnfMessage;
+import gwbot.message.FinishMessage;
+import gwbot.message.SpawnMessage;
 
 /**
  *
@@ -143,7 +147,8 @@ public final class Main {
 					break;
 				case "carPositions":
 					// receive
-					Type carPositionsCollectionType = new TypeToken<ArrayList<CarPositionMessage>>() {}.getType();
+					Type carPositionsCollectionType = new TypeToken<ArrayList<CarPositionMessage>>() {
+					}.getType();
 					List<CarPositionMessage> carPositions = gson.fromJson(msgFromServer.data.toString(), carPositionsCollectionType);
 					currentTick = msgFromServer.gameTick;
 					bot.onCarPositions(carPositions);
@@ -163,17 +168,27 @@ public final class Main {
 					break;
 				case "finish":
 					// somebody finished the race
-					System.out.println("Somebody finished the race.");
+					FinishMessage finishMessage = gson.fromJson(msgFromServer.data.toString(), FinishMessage.class);
+					System.out.println(finishMessage.getCar() + " finished the race.");
+					// @todo
 					break;
 				case "crash":
-					// crashing
-					System.out.println("Somebody crashed.");
+					// somebody crashed
+					CrashMessage crashMessage = gson.fromJson(msgFromServer.data.toString(), CrashMessage.class);
+					System.out.println(crashMessage.getCar() + " crashed.");
 					// @todo
 					break;
 				case "spawn":
-					// respawn after crashing
-					System.out.println("Somebody respawned after a crash.");
+					// somebody respawned after crashing
+					SpawnMessage spawnMessage = gson.fromJson(msgFromServer.data.toString(), SpawnMessage.class);
+					System.out.println(spawnMessage.getCar() + " respawned after a crash.");
 					// @todo
+					break;
+				case "dnf":
+					// somebody was removed from the game
+					DnfMessage dnfMessage = gson.fromJson(msgFromServer.data.toString(), DnfMessage.class);
+					System.out.println(dnfMessage.getCar() + " was disqualified.");
+					// ̍todo
 					break;
 				case "gameEnd":
 					// current game has ended
@@ -187,7 +202,7 @@ public final class Main {
 					System.out.println("Tournament has ended.");
 					break;
 				case "error":
-					System.err.println("Error received: \"" + msgFromServer.data.toString()+"\"");
+					System.err.println("Error received: \"" + msgFromServer.data.toString() + "\"");
 					System.err.println("  Last received was " + gson.toJson(lastReceived));
 					System.err.println("  Last sent was " + lastSent.toJson(gson));
 					break;
@@ -200,9 +215,9 @@ public final class Main {
 
 			lastReceived = msgFromServer;
 
-			if(ciDebug <= 5) {
+			if (ciDebug <= 5) {
 				System.err.println("  CI-Debug: Received " + gson.toJson(lastReceived));
-				if(lastSent != null) {
+				if (lastSent != null) {
 					System.err.println("  CI-Debug: Sent " + lastSent.toJson(gson));
 				}
 				lastSent = null;
