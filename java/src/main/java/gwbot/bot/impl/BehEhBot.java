@@ -9,7 +9,6 @@ import gwbot.message.GameInitMessage;
 import gwbot.message.GameStartMessage;
 import gwbot.message.JoinMessage;
 import gwbot.message.PingMessage;
-import gwbot.message.SwitchLaneMessage;
 import gwbot.message.ThrottleMessage;
 import gwbot.message.TurboAvailableMessage;
 import gwbot.message.YourCarMessage;
@@ -26,6 +25,9 @@ import java.util.List;
 public class BehEhBot extends GenericBot {
 
 	private Track track;
+
+	public BehEhBot() {
+	}
 
 	public BehEhBot(Main main) {
 		super(main);
@@ -66,6 +68,11 @@ public class BehEhBot extends GenericBot {
 	private double lastAngle;
 	private boolean switched = false;
 
+	double angle1;
+	double angle2;
+	double angle3;
+	double curveTick = 0;
+
 	@Override
 	public void onCarPositions(List<CarPositionMessage> carPositionMessages) {
 		// ignore if no game is running
@@ -85,47 +92,56 @@ public class BehEhBot extends GenericBot {
 			System.out.println("could not find own car position message");
 			return;
 		}
-
 		Piece currentPiece = track.getPiece(ownPositionMessage.getPieceIndex());
-		Piece nextPiece = track.getPiece((ownPositionMessage.getPieceIndex() + 1) % track.getPieceCount());
-		ownPositionMessage.getInPieceDistance();
 
-		// update speedl
-		if (lastProgression < ownPositionMessage.getInPieceDistance()) {
-			lastSpeed = speed;
-			speed = ownPositionMessage.getInPieceDistance() - lastProgression;
+		double throttle = 1.1d;
+
+		if (currentPiece.isCurve()) {
+			double absAngle = Math.abs(ownPositionMessage.getAngle());
+			if (curveTick == 0) {
+				if (absAngle > 0) {
+					// start curve angle calculation
+					curveTick++;
+					System.out.println("Entered curve with angle " + absAngle);
+					angle1 = absAngle;
+				}
+			} else {
+				curveTick++;
+				if (curveTick == 2) {
+					System.out.println("Captured 2. tick with angle " + absAngle);
+					angle2 = absAngle;
+				}
+				if (curveTick == 3) {
+					angle3 = absAngle;
+					System.out.println("Captured 3. tick with angle " + absAngle);
+					double diff1 = angle2 - angle1;
+					double diff2 = angle3 - angle2;
+					double diff3 = diff1 - diff2;
+					System.out.println("differences are " + diff1 + " and " + diff2 + " (changed by -" + diff3 + ")");
+					System.out.println("Regressing in 100 steps");
+					double angle = angle1;
+					double difference = diff1;
+					for (int i = 0; i <= 100; i++) {
+						angle += difference;
+						difference -= diff3;
+					}
+					System.out.println("Concluded at angle " + angle);
+					lastAngle = absAngle;
+				}
+				if (curveTick > 3) {
+					System.out.println("Captured " + curveTick + ". tick with angle " + absAngle + " (" + (absAngle - lastAngle) +")");
+					lastAngle = absAngle;
+				}
+			}
 		} else {
-			// last piece length - progression from last piece + progressio
-		}
-		lastProgression = ownPositionMessage.getInPieceDistance();
-
-		// distance to next piece
-		double distance = currentPiece.getLength() - ownPositionMessage.getInPieceDistance();
-
-		// calculate angledifference
-		double angleDifference = 0.0d;
-		if (currentPiece.isCurve()) {
-			angleDifference = Math.abs(ownPositionMessage.getAngle()) - Math.abs(lastAngle);
-		}
-		double angle = lastAngle = ownPositionMessage.getAngle();
-
-		if (currentPiece.isCurve()) {
-			//System.out.println("speed " + speed + ", angle " + angle);
+			if (curveTick != 0) {
+				curveTick = 0;
+				angle1 = 0;
+				angle2 = 0;
+				angle3 = 0;
+			}
 		}
 
-		if (!switched && nextPiece.isSwitch()) {
-			send(new SwitchLaneMessage(SwitchLaneMessage.Direction.RIGHT));
-			switched = true;
-			return;
-		}
-
-		double throttle = 0.4d;
-		if (currentPiece.isCurve()) {
-			// throttle = 1 * Math.sin(Math.PI / currentPiece.getLength() *
-			// ownPositionMessage.getInPieceDistance());
-			// System.out.println(Math.PI / currentPiece.getLength() *
-			// ownPositionMessage.getInPieceDistance() + "throttle "+throttle);
-		}
 		send(new ThrottleMessage(throttle));
 	}
 

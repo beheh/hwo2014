@@ -15,7 +15,14 @@ public abstract class GenericBot implements BotInterface {
 		this.main = main;
 	}
 
+	public GenericBot() {
+	}
+
 	protected void send(Message message) {
 		main.send(message);
+	}
+
+	public void setMain(Main main) {
+		this.main = main;
 	}
 }

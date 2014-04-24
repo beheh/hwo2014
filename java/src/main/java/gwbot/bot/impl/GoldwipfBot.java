@@ -23,6 +23,9 @@ import java.util.List;
  */
 public class GoldwipfBot extends GenericBot {
 
+	public GoldwipfBot() {
+	}
+
 	public GoldwipfBot(Main main) {
 		super(main);
 	}
@@ -66,41 +69,37 @@ public class GoldwipfBot extends GenericBot {
 
 	@Override
 	public void onCarPositions(List<CarPositionMessage> carPositionMessages) {
-		
+
 		// ignore if no game is running
-		if(!gameRunning) {
+		if (!gameRunning) {
 			send(new PingMessage());
 			return;
 		}
-		
+
 		// find our position message
 		CarPositionMessage ownPositionMessage = null;
-		for(CarPositionMessage carPositionMessage : carPositionMessages) {
-			if(ownCar.equals(carPositionMessage.getCar())) {
+		for (CarPositionMessage carPositionMessage : carPositionMessages) {
+			if (ownCar.equals(carPositionMessage.getCar())) {
 				ownPositionMessage = carPositionMessage;
-			} 
+			}
 		}
-		if(ownPositionMessage == null) {
+		if (ownPositionMessage == null) {
 			System.out.println("could not find own car position message");
 			return;
 		}
-		
-		// update current speed, friction coefficient
 
+		// update current speed, friction coefficient
 		// check if we should switch lanes for minimum distance
 		if (checkForSwitch(race.getTrack().getPiece(ownPositionMessage.getPieceIndex()))) {
 			System.out.println("Switched lane.");
 			return;
 		}
-		
+
 		// check for turbo
-		
 		// with other cars:
 		// check if car is just ahead (look for next switch to overtake, or use it to break next curve)
 		// check for car approaching faster from behind (brake in advance)
-		
 		// do actual speed calculation, braking in curve, ABS for drifting...
-		
 		send(new ThrottleMessage(0.4));
 	}
 
@@ -124,7 +123,8 @@ public class GoldwipfBot extends GenericBot {
 			// if necessary, send the switch
 			if (angToNextSwitch == 0) {
 				return false;
-			} if (angToNextSwitch > 0) {
+			}
+			if (angToNextSwitch > 0) {
 				send(new SwitchLaneMessage(SwitchLaneMessage.Direction.RIGHT));
 			} else {
 				send(new SwitchLaneMessage(SwitchLaneMessage.Direction.LEFT));

@@ -19,12 +19,15 @@ import gwbot.track.Track;
 import java.util.List;
 
 /**
- * 
+ *
  * @author Nico Smeenk
  */
 public class NicoBot extends GenericBot {
 
 	private Track _track;
+
+	public NicoBot() {
+	}
 
 	public NicoBot(Main main) {
 		super(main);
@@ -63,8 +66,7 @@ public class NicoBot extends GenericBot {
 				Piece lastPiece = _track.getPiece(_lastPosition.getPieceIndex());
 				if (curPiece == lastPiece) {
 					v = ownPositionMessage.getInPieceDistance() - _lastPosition.getInPieceDistance();
-				}
-				else {
+				} else {
 					v += (lastPiece.getLength() - _lastPosition.getInPieceDistance());
 					Piece next = lastPiece.next();
 					while (next != curPiece) {
@@ -97,16 +99,13 @@ public class NicoBot extends GenericBot {
 			}
 			if (angToNextSwitch == 0) {
 				send(new ThrottleMessage(0.5));
-			}
-			else if (angToNextSwitch > 0) {
+			} else if (angToNextSwitch > 0) {
 				send(new SwitchLaneMessage(Direction.RIGHT));
-			}
-			else {
+			} else {
 				send(new SwitchLaneMessage(Direction.LEFT));
 			}
 			sendFor = currentPiece.next();
-		}
-		else {
+		} else {
 			send(new ThrottleMessage(0.5));
 		}
 	}
