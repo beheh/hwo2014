@@ -51,6 +51,8 @@ public class BehEhBot extends GenericBot {
 	@Override
 	public void onGameStartMessage(GameStartMessage gameStartMessage) {
 		gameRunning = true;
+		// send initial throttle
+		send(new ThrottleMessage(1));
 	}
 
 	@Override
@@ -75,9 +77,9 @@ public class BehEhBot extends GenericBot {
 
 	@Override
 	public void onCarPositions(List<CarPositionMessage> carPositionMessages) {
-		//just set throttle to 1 for next race if no game is running
+		// don't do stuff if game is not running
 		if (!gameRunning) {
-			send(new ThrottleMessage(1));
+			send(new PingMessage());
 			return;
 		}
 

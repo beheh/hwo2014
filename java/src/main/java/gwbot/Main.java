@@ -143,8 +143,7 @@ public final class Main {
 					break;
 				case "carPositions":
 					// receive
-					Type carPositionsCollectionType = new TypeToken<ArrayList<CarPositionMessage>>() {
-					}.getType();
+					Type carPositionsCollectionType = new TypeToken<ArrayList<CarPositionMessage>>() {}.getType();
 					List<CarPositionMessage> carPositions = gson.fromJson(msgFromServer.data.toString(), carPositionsCollectionType);
 					currentTick = msgFromServer.gameTick;
 					bot.onCarPositions(carPositions);
