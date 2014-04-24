@@ -34,6 +34,7 @@ import gwbot.bot.impl.BehEhBot;
 import gwbot.message.CrashMessage;
 import gwbot.message.DnfMessage;
 import gwbot.message.FinishMessage;
+import gwbot.message.LapFinishedMessage;
 import gwbot.message.SpawnMessage;
 
 /**
@@ -86,8 +87,6 @@ public final class Main {
 
 	public final Gson gson;
 	private final PrintWriter writer;
-
-	int ciDebug = 0;
 
 	public Main(final BufferedReader reader, final PrintWriter writer, final Message join, final GenericBot bot) throws IOException {
 
@@ -153,7 +152,6 @@ public final class Main {
 					currentTick = msgFromServer.gameTick;
 					bot.onCarPositions(carPositions);
 					currentTick = null;
-					ciDebug++;
 					break;
 				case "turboAvailable":
 					// turbo is available for a certain length
@@ -163,7 +161,8 @@ public final class Main {
 					break;
 				case "lapFinished":
 					// somebody completed a lap
-					System.out.println("Somebody completed a lap.");
+					LapFinishedMessage lapFinishedMessage = gson.fromJson(msgFromServer.data.toString(), LapFinishedMessage.class);
+					System.out.println(lapFinishedMessage.getCar() + " completed a lap.");
 					// @todo
 					break;
 				case "finish":
@@ -203,8 +202,12 @@ public final class Main {
 					break;
 				case "error":
 					System.err.println("Error received: \"" + msgFromServer.data.toString() + "\"");
-					System.err.println("  Last received was " + gson.toJson(lastReceived));
-					System.err.println("  Last sent was " + lastSent.toJson(gson));
+					if (lastReceived != null) {
+						System.err.println("  Last received was " + gson.toJson(lastReceived));
+					}
+					if (lastSent != null) {
+						System.err.println("  Last sent was " + lastSent.toJson(gson));
+					}
 					break;
 				default:
 					// do nothing, return ping to acknowledge
@@ -214,14 +217,6 @@ public final class Main {
 			}
 
 			lastReceived = msgFromServer;
-
-			if (ciDebug <= 5) {
-				System.err.println("  CI-Debug: Received " + gson.toJson(lastReceived));
-				if (lastSent != null) {
-					System.err.println("  CI-Debug: Sent " + lastSent.toJson(gson));
-				}
-				lastSent = null;
-			}
 
 			if (disconnect) {
 				break;
