@@ -168,12 +168,12 @@ public final class Main {
 					break;
 				case "crash":
 					// crashing
-					System.out.println("Crashed.");
+					System.out.println("Somebody crashed.");
 					// @todo
 					break;
 				case "spawn":
 					// respawn after crashing
-					System.out.println("Respawned after crash.");
+					System.out.println("Somebody respawned after a crash.");
 					// @todo
 					break;
 				case "gameEnd":
